@@ -50,22 +50,58 @@ inventory$quantity <- round(runif(300, 0, 2030), digits=0)
 inventory$Products_T_ProductID <- 1:300
 colnames(inventory)[1] <- "InventoryID"
 
-write.csv(inventory, "Inventory_T", row.names = FALSE)
+write.csv(inventory, "Inventory_T.csv", row.names = FALSE)
+
+# CUSTOMERCARTLINES_T --------------------------------------------------------------
+# Choose 2000 customers to have carts currently
+customer_ids_with_cart_lines <- as.data.frame(c(sample(50000, 2000)))
+
+# Initialize data frame
+customercartlines <- as.data.frame(c(''), stringsAsFactors = FALSE)
+customercartlines$customers_t_customerID <- 0
+
+# Add customers 1-5 times
+for (custid in customer_ids_with_cart_lines) {
+  for (cartlinect in (1:round(runif(1, 1, 5)))) {
+    a <- data.frame(c(''), custid)
+    names(a) <- colnames(customercartlines)
+    customercartlines <- rbind(customercartlines, a)
+    }
+}
+
+customercartlines$products_t_productid <- sample(50000, nrow(customercartlines), replace = FALSE)
+customercartlines$quantity <- sample(5, nrow(customercartlines), replace = TRUE)
+
+write.csv(customercartlines[c(-1), c(-1)], "Customercartlines_T.csv", row.names = FALSE)
+
 
 # ORDERLINE_T --------------------------------------------------------------
-#TODO
+# Dates to help interject trends into the data
+christmas_dates <-         c('2015/12/25', '2016/12/25', '2017/12/25', '2018/12/25')
+valentines_dates <-        c('2015/02/14', '2016/02/14', '2017/02/14', '2018/02/14')
+halloween_dates <-         c('2015/10/31', '2016/10/31', '2017/10/31', '2018/10/31')
+labor_dates <-             c('2015/09/07', '2016/09/05', '2017/09/04', '2018/09/03')
+mothers_day <-             c('2015/05/10', '2016/05/08', '2017/05/14', '2018/05/13')
+fathers_day <-             c('2015/06/21', '2016/06/19', '2017/06/18', '2018/06/17')
+national_sunglasses_day <- c('2015/07/27', '2016/07/27', '2017/07/27', '2018/07/27')
+
+dates_df <- data.frame(christmas_dates, valentines_dates, 
+                          halloween_dates, labor_dates, mothers_day,
+                          fathers_day, national_sunglasses_day)
+library(tidyr)
+dates_df <- dates_df %>% gather(colnames(dates_df), key = "datetype")
+
 
 # ORDER_T --------------------------------------------------------------
 #OrderID, customerId, OrderDate, fullfillmentdate, ordercost
 
-OrderDate <- sample(seq(as.Date('2017/01/01'), as.Date('2018/11/01'), by="day"),
-                400000, replace = TRUE)
+OrderDate <- sample(seq(as.Date('2015/01/01'), as.Date('2018/12/31'), by="day"),
+                    400000, replace = TRUE)
 customerID <- sample(50000, 150000, replace = TRUE)
 FullfillmentDate <- OrderDate + 1:10 # staggers fulfillment date from 1-10
+
+
 OrderCost # TODO: Ordercost will be a sum of orderline data
 
 # ORDERLINE_T --------------------------------------------------------------
-
-
-# CUSTOMERCARTLINES_T --------------------------------------------------------------
-#TODO
+## Need to interject trends
