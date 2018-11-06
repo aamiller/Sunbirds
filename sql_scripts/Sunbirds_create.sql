@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2018-10-29 19:25:05.413
+-- Last modification date: 2018-11-06 19:16:22.753
 
 -- tables
 -- Table: CustomerCartLines_T
@@ -34,7 +34,6 @@ CREATE TABLE Inventory_T (
 -- Table: OrderLine_T
 CREATE TABLE OrderLine_T (
     OrderLineID int  NOT NULL,
-    OrderID int  NOT NULL,
     OrderedQuantity int  NOT NULL,
     Order_T_OrderID int  NOT NULL,
     Products_T_ProductID int  NOT NULL,
@@ -44,10 +43,10 @@ CREATE TABLE OrderLine_T (
 -- Table: Order_T
 CREATE TABLE Order_T (
     OrderID int  NOT NULL,
-    CustomerID int  NOT NULL,
     OrderDate date  NOT NULL,
     FulfillmentDate date  NOT NULL,
     OrderCost int  NOT NULL,
+    Customers_T_CustomerID int  NOT NULL,
     CONSTRAINT Order_T_pk PRIMARY KEY (OrderID)
 );
 
@@ -61,6 +60,7 @@ CREATE TABLE Products_T (
     is_available bool  NOT NULL,
     frame_type varchar(20)  NOT NULL,
     color varchar(20)  NOT NULL,
+    photoURL int  NOT NULL,
     CONSTRAINT Products_T_pk PRIMARY KEY (ProductID)
 );
 
@@ -101,6 +101,14 @@ ALTER TABLE OrderLine_T ADD CONSTRAINT OrderLine_T_Order_T
 ALTER TABLE OrderLine_T ADD CONSTRAINT OrderLine_T_Products_T
     FOREIGN KEY (Products_T_ProductID)
     REFERENCES Products_T (ProductID)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Order_T_Customers_T (table: Order_T)
+ALTER TABLE Order_T ADD CONSTRAINT Order_T_Customers_T
+    FOREIGN KEY (Customers_T_CustomerID)
+    REFERENCES Customers_T (CustomerID)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
