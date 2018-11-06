@@ -21,10 +21,17 @@ colnames(nouns) <- "nouns"
 colors <- read.csv("supporting_data/colors.csv", stringsAsFactors = FALSE)
 colnames(colors)[2] <- "ColorName"
 colors <- colors[!grepl('\\(', colors$ColorName), ]
-glassesNames <- as.data.frame(paste(colors$ColorName, nouns$nouns, "Glasses"), stringsAsFactors = FALSE)
+colors <- colors[sample(nrow(colors), 300), ]
 
-# Choose 300 product names, write them
-# TODO -- currently only contains product names
-write.csv(glassesNames[sample(nrow(glassesNames), 300), ], "Products_T.csv", row.names = FALSE)
+glassesNames <- as.data.frame(paste(colors$ColorName, nouns[sample(nrow(nouns), 300, replace=TRUE),
+                                                            'nouns'], "Glasses"), stringsAsFactors = FALSE)
 
+# Choose other factors
+product_description <- "Lorem ipsum sunglasses"
+is_sunglass <- c(TRUE, FALSE, FALSE, TRUE, TRUE)
+product_standard_price <- runif(300, 0, 2300)
+is_available <- c(TRUE, FALSE, TRUE, TRUE)
+frame_type <- c("Cat Eye", "Aviator", "Rimless", "Oval", "Sport")
+color <- colors$ColorName
+photoURL <- c("https://imgur.com/a/fake1", "https://imgur.com/a/fake2")
 
