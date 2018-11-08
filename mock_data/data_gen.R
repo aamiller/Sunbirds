@@ -12,7 +12,7 @@ customer_ct <- 50000
 file_list <- paste0("supporting_data/customer_data_to_combine/",
                     list.files(path="supporting_data/customer_data_to_combine/."))
 customer_t <- do.call(rbind, lapply(file_list, function(x) read.csv(x, stringsAsFactors = FALSE)))
-write.csv(customer_t, "Customer_T.csv", row.names = FALSE)
+#write.csv(customer_t, "Customer_T.csv", row.names = FALSE)
 
 
 # PRODUCTS_T --------------------------------------------------------------
@@ -46,7 +46,7 @@ glassesNames$frame_type <- c("Cat Eye", "Aviator", "Rimless", "Oval", "Sport")
 glassesNames$color <- colors$ColorName
 glassesNames$photoURL <- c("https://imgur.com/a/fake1", "https://imgur.com/a/fake2")
 colnames(glassesNames)[1] <- "ProductName"
-write.csv(glassesNames, "Products_T.csv", row.names = FALSE)
+#write.csv(glassesNames, "Products_T.csv", row.names = FALSE)
 
 # INVENTORY_T --------------------------------------------------------------
 inventory <- as.data.frame(1:300)
@@ -54,7 +54,7 @@ inventory$quantity <- round(runif(300, 0, 2030), digits=0)
 inventory$Products_T_ProductID <- 1:300
 colnames(inventory)[1] <- "InventoryID"
 
-write.csv(inventory, "Inventory_T.csv", row.names = FALSE)
+#write.csv(inventory, "Inventory_T.csv", row.names = FALSE)
 
 # CUSTOMERCARTLINES_T --------------------------------------------------------------
 # Choose 2000 customers to have carts currently
@@ -80,7 +80,7 @@ customercartlines$products_t_productid <- sample(availableGlasses$id,
                                                  nrow(customercartlines), replace = TRUE)
 customercartlines$quantity <- sample(5, nrow(customercartlines), replace = TRUE)
 
-write.csv(customercartlines[c(-1), c(-1)], "Customercartlines_T.csv", row.names = FALSE)
+#write.csv(customercartlines[c(-1), c(-1)], "Customercartlines_T.csv", row.names = FALSE)
 
 
 # ORDERLINE_T & ORDER_T --------------------------------------------------------------
@@ -116,11 +116,16 @@ order$OrderID <- 1:nrow(order)
 order$Customers_T_CustomerID <- sample(1:customer_ct, nrow(order), replace = TRUE)
 
 # Create dataframe to store orderline data
-dates <- seq(data_start_date, data_end_date, by="day")
-orderline <- data.frame(c(0), c(0), c(0), c(0), stringsAsFactors = FALSE)
-colnames(orderline) <- c("OrderLineID", "OrderedQuantity", "Order_T_OrderID", "Products_T_ProductID")
-
-for (i in 1:nrow(order)) {
+create_orderline <- function() {
+  orderline <- data.frame(c(0), c(0), c(0), c(0), stringsAsFactors = FALSE)
+  colnames(orderline) <- c("OrderLineID", "OrderedQuantity", "Order_T_OrderID", "Products_T_ProductID")
+  orderline <- orderline[c(-1), ]
+  return(orderline)
+}
+orderline <- create_orderline()
+  
+# Runs for a long time
+for (i in 490001:nrow(order)) {
 # For each order, pick 1-5 different items a customer might order.
 # We can ignore what is or isn't available currently, as it might have been 
 # available in the past and we aren't tracking historical availability data.
@@ -143,14 +148,23 @@ order$OrderCost[i] <- sum_cost
     names(a) <- colnames(orderline)
     orderline <- rbind(orderline, a)
   }
-}
-orderline <- orderline[c(-1), ]
-orderline$OrderLineID <- 1:nrow(orderline)
 
-# Handle holiday orders
-source('holiday_dates_for_trends.R')
+  print(i)
+  # Write every 20000 rows  
+  if (i %% 10000 == 0) {
+    print("write")
+    write.csv(order, paste0("order_dat/", i - 10000 ,"_slice_on_orders_", i, ".csv"), row.names = FALSE)
+    write.csv(orderline, paste0("order_dat/", i - 10000, "_slice_on_orderlines_", i, ".csv"), row.names = FALSE)
+    
+    # Reset orderline for speed. Large orderline table slows process
+    orderline <- create_orderline()
+  }
+}
+
+#write.csv(orderline, "last_orderline_rows.csv", row.names = FALSE)
+#write.csv(order, "Order_T.csv", row.names = FALSE)
 
 #TODO
-write.csv(orderline, "Orderline_T", row.names = FALSE)
-write.csv(order, "Orders_T", row.names = FALSE)
+# Handle holiday orders
+source('holiday_dates_for_trends.R')
 
