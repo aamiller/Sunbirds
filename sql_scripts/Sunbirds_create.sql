@@ -1,5 +1,4 @@
--- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2018-11-14 00:35:37.532
+-- TODO: Customer_T partition by state @PAUL
 
 -- tables
 -- Table: CustomerCartLines_T
@@ -70,7 +69,8 @@ CREATE TABLE Order_T (
     OrderCost int  NOT NULL,
     Customers_T_CustomerID int  NOT NULL,
     CONSTRAINT Order_T_pk PRIMARY KEY (OrderID)
-);
+)
+    PARTITION BY RANGE (OrderDate);
 
 CREATE INDEX Order_T_OrderID_idx on Order_T (OrderID ASC);
 
@@ -127,6 +127,7 @@ ALTER TABLE OrderLine_T ADD CONSTRAINT OrderLine_T_Order_T
 ;
 
 -- Reference: OrderLine_T_Products_T (table: OrderLine_T)
+
 ALTER TABLE OrderLine_T ADD CONSTRAINT OrderLine_T_Products_T
     FOREIGN KEY (Products_T_ProductID)
     REFERENCES Products_T (ProductID)  
@@ -150,5 +151,20 @@ ALTER TABLE Products_T ADD CONSTRAINT Products_T_FrameType_T
     INITIALLY IMMEDIATE
 ;
 
--- End of file.
+-- Add partitions
+CREATE TABLE Order_T.orders_2015
+    PARTITION
+    OF Order_T FOR VALUES FROM ('2015-01-01') TO ('2015-12-31');
+
+CREATE TABLE Order_T.orders_2016
+    PARTITION
+    OF Order_T FOR VALUES FROM ('2016-01-01') TO ('2016-12-31');
+    
+CREATE TABLE Order_T.orders_2017
+    PARTITION
+    OF Order_T FOR VALUES FROM ('2017-01-01') TO ('2017-12-31');
+    
+CREATE TABLE Order_T.orders_2018
+    PARTITION
+    OF Order_T FOR VALUES FROM ('2018-01-01') TO ('2018-12-31');
 
