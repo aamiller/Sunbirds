@@ -10,7 +10,7 @@ CREATE TABLE CustomerCartLines_T (
     CONSTRAINT CustomerCartLines_T_pk PRIMARY KEY (CartLineID)
 );
 
-CREATE CLUSTERED INDEX CustomerCartLines_T_CartLineID_idx on CustomerCartLines_T (CartLineID ASC);
+CLUSTER CustomerCartLines_T using CustomerCartLines_T_pk;
 
 -- Table: Customers_T
 CREATE TABLE Customers_T (
