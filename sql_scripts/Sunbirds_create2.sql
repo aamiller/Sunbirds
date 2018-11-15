@@ -9,8 +9,8 @@ CREATE TABLE CustomerCartLines_T (
     Quantity int  NOT NULL,
     CONSTRAINT CustomerCartLines_T_pk PRIMARY KEY (CartLineID)
 );
-
-CLUSTER CustomerCartLines_T using CustomerCartLines_T_pk;
+CREATE INDEX CustomerCartLines_T_CartLineID on CustomerCartLines_T (CartLineID ASC);
+CLUSTER CustomerCartLines_T using CustomerCartLines_T_CartLineID;
 
 -- Table: Customers_T
 CREATE TABLE Customers_T (
@@ -59,7 +59,10 @@ CREATE TABLE OrderLine_T (
     CONSTRAINT OrderLine_T_pk PRIMARY KEY (OrderLineID)
 );
 
-CLUSTER OrderLine_T using OrderLine_T_pk;
+CREATE INDEX OrderLine_T_OrderLineID_idx on OrderLine_T (OrderLineID ASC);
+CREATE INDEX OrderLine_T_OrderID_idx on OrderLine_T (OrderLineID ASC);
+CLUSTER OrderLine_T using OrderLine_T_OrderID_idx;
+
 
 -- Table: Order_T
 CREATE TABLE Order_T (
