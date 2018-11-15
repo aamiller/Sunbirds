@@ -59,7 +59,7 @@ CREATE TABLE OrderLine_T (
     CONSTRAINT OrderLine_T_pk PRIMARY KEY (OrderLineID)
 );
 
-CREATE INDEX OrderLine_T_OrderLineID_idx on OrderLine_T (OrderLineID ASC);
+CLUSTER OrderLine_T using OrderLine_T_pk;
 
 -- Table: Order_T
 CREATE TABLE Order_T (
