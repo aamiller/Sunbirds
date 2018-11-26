@@ -78,11 +78,11 @@ CREATE INDEX Order_T_idx_OrderDate_idx on Order_T (OrderDate ASC);
 CREATE TABLE Products_T (
     ProductID int  NOT NULL,
     ProductName varchar(255)  NOT NULL,
-    ProductDescription int  NOT NULL,
+    ProductDescription varchar(255)  NOT NULL,
     is_sunglass bool  NOT NULL,
     ProductStandardPrice money  NULL,
     can_be_sold bool  NOT NULL, -- Can be true while inventory is 0. Denotes if a product even if it has inventory is available for sale.
-    photoURL int  NOT NULL,
+    photoURL varchar(255)  NOT NULL,
     FrameType_T_FrameTypeID int  NOT NULL,
     CONSTRAINT Products_T_pk PRIMARY KEY (ProductID)
 );
