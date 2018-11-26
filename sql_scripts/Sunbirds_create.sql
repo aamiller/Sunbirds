@@ -1,5 +1,3 @@
--- TODO: Customer_T partition by state @PAUL
-
 -- tables
 -- Table: CustomerCartLines_T
 CREATE TABLE CustomerCartLines_T (
@@ -83,7 +81,7 @@ CREATE TABLE Products_T (
     ProductDescription int  NOT NULL,
     is_sunglass bool  NOT NULL,
     ProductStandardPrice money  NULL,
-    is_available bool  NOT NULL,
+    can_be_sold bool  NOT NULL, -- Can be true while inventory is 0. Denotes if a product even if it has inventory is available for sale.
     photoURL int  NOT NULL,
     FrameType_T_FrameTypeID int  NOT NULL,
     CONSTRAINT Products_T_pk PRIMARY KEY (ProductID)
