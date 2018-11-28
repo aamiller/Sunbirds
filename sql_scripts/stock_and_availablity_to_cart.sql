@@ -37,7 +37,7 @@ CREATE TRIGGER quantity_check
 ----- testing
 
 ----- adding a dummy customer
-INSERT INTO sunbirds.products_t (productid, productname, productdescription, is_sunglass, productstandardprice, is_available, frame_type, color)
+INSERT INTO sunbirds.products_t (productid, productname, productdescription, is_sunglass, productstandardprice, can_be_sold, frame_type, color)
 VALUES(1, 'Clubmaster', 22, TRUE, 50.00, TRUE, '7-MVK', 'Black');
 
 
@@ -72,7 +72,7 @@ CREATE OR REPLACE FUNCTION availability_check()
   RETURNS TRIGGER
   AS $check_availability$
 BEGIN
-  IF ((SELECT is_available FROM sunbirds.products_t WHERE productid = NEW.products_t_productid) = FALSE)
+  IF ((SELECT can_be_sold FROM sunbirds.products_t WHERE productid = NEW.products_t_productid) = FALSE)
      OR
      ((SELECT quantity FROM sunbirds.inventory_t WHERE products_t_productid = NEW.products_t_productid) <= 0)
   THEN
@@ -92,15 +92,15 @@ CREATE trigger availability_check
 -------- testing --------
 
 ----- adding product that is not available
-INSERT INTO sunbirds.products_t (productid, productname, productdescription, is_sunglass, productstandardprice, is_available, frame_type, color)
+INSERT INTO sunbirds.products_t (productid, productname, productdescription, is_sunglass, productstandardprice, can_be_sold, frame_type, color)
 VALUES(2, 'Something', 21, TRUE, 50.00, FALSE, '7-MVK', 'Black');
 
 ----- adding product that is available
-INSERT INTO sunbirds.products_t (productid, productname, productdescription, is_sunglass, productstandardprice, is_available, frame_type, color)
+INSERT INTO sunbirds.products_t (productid, productname, productdescription, is_sunglass, productstandardprice, can_be_sold, frame_type, color)
 VALUES(3, 'Black Shades', 23, TRUE, 50.00, TRUE, '7-MVK', 'Black');
 
 ----- adding product that is unavailable
-INSERT INTO sunbirds.products_t (productid, productname, productdescription, is_sunglass, productstandardprice, is_available, frame_type, color)
+INSERT INTO sunbirds.products_t (productid, productname, productdescription, is_sunglass, productstandardprice, can_be_sold, frame_type, color)
 VALUES(4, 'Yello Shades', 24, TRUE, 50.00, FALSE, '7-MVK', 'Yellow');
 
 ----- adding inventory of 20 for available product
