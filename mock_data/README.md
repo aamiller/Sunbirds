@@ -63,7 +63,7 @@ Fields
 Example: 37421, 21, 4
 
 ## Orderline_T
-# Records ~ 600,000 * 3
+#  2188378 Records
 Individual order lines from orders.
 - "OrderLineID"
 - "OrderedQuantity" - Quantity of item ordered
@@ -71,7 +71,7 @@ Individual order lines from orders.
 - "Product_T_ProductID" - product ordered
 
 ## Order_T
-# Records 600,000
+# 732,153 Records
 - "OrderID"
 - "OrderDate" - date order was places
 - "FullfillmentDate" - date order was fulfilled
