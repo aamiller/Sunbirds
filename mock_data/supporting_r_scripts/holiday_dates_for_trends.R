@@ -45,3 +45,17 @@ fathers_day_QM <-      2.2 * year_popularity_multiplier
 
 national_sunglasses_day_OM <- 5 * year_popularity_multiplier
 national_sunglasses_day_QM <- 3.5 * year_popularity_multiplier
+
+# Combine order multipliers
+OM_multiplier_df <- data.frame(christmas_dates_OM, valentines_dates_OM, halloween_dates_OM, 
+                       labor_dates_OM, mothers_day_OM, fathers_day_OM, national_sunglasses_day_OM)
+OM_multiplier_df <- OM_multiplier_df %>% gather(colnames(OM_multiplier_df), key = "OM")
+
+
+# Combine quantity multipliers
+QM_multiplier_df <- data.frame(christmas_dates_QM, valentines_dates_QM, halloween_dates_QM, 
+                               labor_dates_QM, mothers_day_QM, fathers_day_QM, national_sunglasses_day_QM)
+QM_multiplier_df <- QM_multiplier_df %>% gather(colnames(QM_multiplier_df), key = "OM")
+
+dates_df$OM <- OM_multiplier_df$`colnames(OM_multiplier_df)`
+dates_df$QM <- QM_multiplier_df$`colnames(QM_multiplier_df)`
