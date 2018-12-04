@@ -188,9 +188,16 @@ holiday_order <- holiday_order[, c(-6)]
 
 # Adjust order numbers
 holiday_order$OrderID <- (nrow(order_T) + 1):(nrow(order_T) + nrow(holiday_order)) 
+holiday_order <- holiday_order[1:130000, ]
 
 # Combine and write
 combined_orders <- rbind(order_T, holiday_order)
+
+library(lubridate)
+
+holiday_order$FulfillmentDate <- strptime(holiday_order$FulfillmentDate, "%m/%d/%y")
+holiday_order$OrderDate<- strptime(holiday_order$OrderDate, "%m/%d/%y")
+
 #write.csv(combined_orders, "db_tables/Order_T.csv", row.names = FALSE)
 
 
